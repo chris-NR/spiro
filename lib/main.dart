@@ -18,7 +18,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SpiroPage(title: 'Spirograph'),
+      home: const SpiroPage(
+        title: 'Spirograph',
+        key: GlobalObjectKey('main'),
+      ),
     );
   }
 }
@@ -35,6 +38,7 @@ class SpiroPage extends StatefulWidget {
 class _SpiroPageState extends State<SpiroPage>
     with SingleTickerProviderStateMixin {
   late final AnimationController controller;
+  final path = Path();
   double ratio = 1.0 / 5; //initial ratio
   static const duration = 10; //seconds
 
@@ -44,7 +48,7 @@ class _SpiroPageState extends State<SpiroPage>
     controller = AnimationController(
       vsync: this, // the SingleTickerProviderStateMixin
       duration: const Duration(seconds: duration),
-      upperBound: 2 * pi,
+      upperBound: 20 * pi,
     )..addStatusListener((status) {
         setState(() {});
       });
@@ -57,7 +61,10 @@ class _SpiroPageState extends State<SpiroPage>
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Spiro(controller: controller),
+      body: Spiro(
+          controller: controller,
+          path: path,
+          key: GlobalKey(debugLabel: 'spiro')),
       bottomNavigationBar: const BottomAppBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
       floatingActionButton: !controller.isAnimating
